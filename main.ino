@@ -12,8 +12,8 @@
 #define SCREEN_HEIGHT 64
 #define SCREEN_ADDRESS 0x3c
 
-#define SDA 0 
-#define SCL 1
+#define SDA 26
+#define SCL 27
 
 #define LEFT_CTRL 0x80
 #define CTRL 0x80
@@ -38,9 +38,8 @@
 #define RIGHT_ARROW 0xD7
 
 
-//Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-const int led = 16;
 int currMode = 0;
 int modes = 2;
 
@@ -148,24 +147,23 @@ int lastBtn;
 void setup() {
   // put your setup code here, to run once:
   Keyboard.begin();
-  Wire.setSDA(SDA);
-  Wire.setSCL(SCL);
-  Wire.begin();
-  //oled.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  //oled.clearDisplay();
-  //oled.fillScreen(WHITE);
-  //oled.display();
-  pinMode(led, OUTPUT);
+  Wire1.setSDA(SDA);
+  Wire1.setSCL(SCL);
+  Wire1.begin();
   Serial.begin(9600);
+  if(!oled.begin(SSD1306_SWITCHCAPVCC, 0x3D)){
+    Serial.println("not detected");
+  }
+  oled.clearDisplay();
+  oled.fillScreen(WHITE);
+  oled.display();
 }
 
 btnSimple arr[5] = {btnS1, btnS2, btnS3, btnS6, btnS8};
 
 void loop() {
-  digitalWrite(led, HIGH);
   btn1.checkButtons();
   for(int i = 0; i <= sizeof(arr)/sizeof(arr[0])-1; i++){
     arr[i].checkButtons(&lastBtn);
   }
-  //nightSky(oled);
 }
